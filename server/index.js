@@ -4,7 +4,7 @@ const app = express();
 const sequelize = require('./db');
 const user = require('./controllers/usercontroller')
 const userLog = require('./controllers/logcontroller');
-const logmodel = require('./models/logmodel');
+const log = require('./models/logmodel')(sequelize, require('sequelize'));
 
 sequelize.sync(); //tip {force: true} for resetting tables
 app.use(express.json());
@@ -21,7 +21,7 @@ app.use('/user', user);
 
 //PROTECTED ROUTES
 app.use(require('./middleware/validate-session'));
-app.use('/log', logmodel);
+app.use('/log', log);
 
 app.listen(3100, function(){
     console.log('App is listening on 3100')

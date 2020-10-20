@@ -4,5 +4,6 @@ module.exports = function (sequelize, DataTypes){
         definition: DataTypes.STRING,
         result: DataTypes.STRING,
         owner_id: DataTypes.INTEGER
-    });
-};
+        }    
+    );
+}

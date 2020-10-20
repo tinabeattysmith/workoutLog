@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const Sequelize = require('../db');
-var User = require('../models/usermodel')(Sequelize, require('sequelize'));
-var Log = require('../models/logmodel')(Sequelize, require('sequelize'));
+const sequelize = require('../db');
+const User = require('../models/usermodel')(sequelize, require('sequelize'));
+const Log = require('../models/logmodel')(sequelize, require('sequelize'));
 
 /********************************
 GET ALL LOGS FOR INDIVIDUAL USER
