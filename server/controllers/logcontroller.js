@@ -98,7 +98,7 @@ router.delete('/logdelete/:id', function(req, res){
         })
         .then(
             function deleteLogSuccess(Log){
-                res.send('Log successfully delete');
+                res.send('Log successfully deleted');
             },
             function deleteLogError(err){
                 res.send(500, err.message);
