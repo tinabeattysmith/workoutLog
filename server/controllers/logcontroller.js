@@ -7,8 +7,8 @@ const Log = require('../models/logmodel')(sequelize, require('sequelize'));
 GET ALL LOGS FOR INDIVIDUAL USER
 **********************************/
 
-router.get('/log', function(req, res){
-    var logOwner = req.user.id;
+router.get('/logsall', function(req, res){
+    const logOwner = req.user.id;
 
     Log
         .findAll({
@@ -29,22 +29,24 @@ router.get('/log', function(req, res){
 POST SINGLE LOG FOR INDIVIDUAL USER
 **********************************/
 
-router.post('/log', function (req, res) {
-    var logOwner = req.user.id;
-    var logDescription = req.body.log.description;
-    var logDefinition = req.body.log.definition;
-    var logResult = req.body.log.result;
+router.post('/logcreate', function (req, res) {
+    const logOwner = req.user.id;
+    const logDescription = req.body.log.description;
+    const logDefinition = req.body.log.definition;
+    const logResult = req.body.log.result;
 
-    Log.create({
+    Log
+    .create({
             description: logDescription,
             definition: logDefinition,
             result: logResult,
             owner_id: logOwner
         })
         .then(
-            function createSuccess(userLog) {
+            function createSuccess(Log) {
                 res.json({
-                    log: log
+                    log: Log,
+                    message: 'Log successfully created.'
                 });
             },   
             function createError(err) {
@@ -58,21 +60,23 @@ router.post('/log', function (req, res) {
 GET SINGLE ITEM FOR INDIVIDUAL USER
 **********************************/
 
-router.get('/:id', function (req, res) {
+router.get('/Onelog/:id', function (req, res) {
 
-    var data = req.params.id;
-    var userid = req.user.id;
+    const data = req.params.id;
+    const userid = req.user.id;
 
     Log
         .findOne({
-        where: {id: data, owner: userid}
+        where: {id: data, owner_id: userid}
         })
             .then(
-                function findOneSuccess(data) {
-                res.json(data);
+                function findOneSuccess(data) {                    
+                    res.json(data);
                 },
-        function findOneError(err) {
-            res.send(500, err.message);
+        
+            function findOneError(err) {
+                response.status(500).send({error: "Requested log does not exist for the current user."});
+            
         }
     );
 });
@@ -80,21 +84,21 @@ router.get('/:id', function (req, res) {
 
 
 /********************************
-DELETE  ITEM FOR INDIVIDUAL USER
+DELETE  log FOR INDIVIDUAL USER
 **********************************/
-router.delete('/delete/:id', function(req, res){ //:id allows a parameter to be passed through the URL to the server so we can use it later.
-    var data = req.params.id;
-    var userid = req.user.id;
+router.delete('/logdelete/:id', function(req, res){
+    const logID = req.params.id;
+    const userid = req.user.id;
 
     Log
         .destroy({
             where: {
-                id: data, owner: userid
+                id: logID, owner_id: userid
             }
         })
         .then(
-            function deleteLogSuccess(data){
-                res.send('you removed a log');
+            function deleteLogSuccess(Log){
+                res.send('Log successfully delete');
             },
             function deleteLogError(err){
                 res.send(500, err.message);
@@ -104,21 +108,27 @@ router.delete('/delete/:id', function(req, res){ //:id allows a parameter to be 
 
 
 /********************************
-UPDATE SINGLE ITEM FOR INDIVIDUAL USER
+UPDATE SINGLE log FOR INDIVIDUAL USER
 **********************************/
-router.put('/update/:id', function (req, res) {
-    var data = req.params.id;
-    var Log = req.body.log.item;
+router.put('/logupdate/:id', function (req, res) {
+    const logID = req.params.id;
+    const logDescription = req.body.log.description;
+    const logDefinition = req.body.log.definition;
+    const logResult = req.body.log.result;
 
     Log
         .update({
-            log: log,
-        },
-        {where: {id: data}}
+            description: logDescription,
+            definition: logDefinition,
+            result: logResult
+            },  
+
+            {where: {id: logID}}
+
         ).then(
-            function updateSuccess(log) {
+            function updateSuccess(logID) {
                 res.json({
-                    log: log 
+                    message: 'Log was successfully updated.'
                 });
             },   
             function updateError(err) {

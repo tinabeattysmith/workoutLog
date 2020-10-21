@@ -39,7 +39,6 @@ router.post('/login', function(request, response){
         function(user) {
             if (user) {
                 bcrypt.compare(request.body.user.password, user.passwordhash, function (err, userMatches) {
-                    //console.log("The value matches:", userMatches);
                     if (userMatches) {
                         var token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 60*60*24});
                         response.json({

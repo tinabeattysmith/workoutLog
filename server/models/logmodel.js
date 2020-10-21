@@ -3,7 +3,8 @@ module.exports = function (sequelize, DataTypes){
         description: DataTypes.STRING,
         definition: DataTypes.STRING,
         result: DataTypes.STRING,
-        owner_id: DataTypes.INTEGER
-        }    
-    );
-}
+        owner_id:{
+            type: DataTypes.INTEGER,
+            allowNull: false}
+    });
+};
