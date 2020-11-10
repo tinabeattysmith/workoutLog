@@ -4,9 +4,9 @@ const app = express();
 const sequelize = require('./db');
 const user = require('./controllers/usercontroller')
 const Log = require('./controllers/logcontroller');
-const userinfo = require('./models/userinfo');
+const userinfo = require('./controllers/userinfocontroller');
 
-sequelize.sync(); //tip {force: true} for resetting tables
+sequelize.sync({force: true}); //tip {force: true} for resetting tables
 app.use(express.json());
 app.use(require('./middleware/headers'));
 

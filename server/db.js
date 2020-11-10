@@ -28,6 +28,4 @@ User.hasMany(Logs);
 User.hasOne(UserInfo);
 UserInfo.belongsTo(User);
 
-
-
 module.exports = sequelize;

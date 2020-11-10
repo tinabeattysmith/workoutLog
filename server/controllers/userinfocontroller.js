@@ -6,14 +6,14 @@ const UserInfo = require('../models/userinfo')(sequelize, require('sequelize'));
 /********************************
 CREATE  information
 **********************************/
-router.post('/createInfo' , (req, res) => {
+router.post('/createInfo', (req, res) => {
  
 UserInfo.create({
-    birthday: req.body.UserInfo.dateOfBirth,
-    age: req.body.UserInfo.age,
-    height: req.body.UserInfo.heightInInches,
-    weight: req.body.UserInfo.weightInPounds,
-    goal: req.body.UserInfo.goal,
+    dateOfBirth: req.body.userInfo.dateOfBirth,
+    age: req.body.userInfo.age,
+    heightInInches: req.body.userInfo.heightInInches,
+    weightInPounds: req.body.userInfo.weightInPounds,
+    goal: req.body.userInfo.goal,
     userId:req.user.id,
 })
     .then(userInfo => res.status(200).json(userInfo))
@@ -35,13 +35,16 @@ router.get('/getInfo', (req, res) => {
             message: "User info found",
             data: data
         })
-    }).catch(err => res.status(500).json(`User Info not found`, `${err}`));
+    }).catch(err => res.status(500).json({
+        message: `User Info not found`,
+        err: `${err}`}
+        ));
 });
 
 /********************************
 Update  information
 **********************************/
-router.getput('/getInfo', (req, res) => {
+router.put('/updateInfo', (req, res) => {
     UserInfo.update(req.body.userInfo, {
         where: {
             userID: req.user.id
@@ -52,7 +55,11 @@ router.getput('/getInfo', (req, res) => {
             message: "User info updated",
             data: data
         })
-    }).catch(err => res.status(500).json(`User Info not updated`, `${err}`));
+    }).catch(err => res.status(500).json({
+        message:`User Info not updated`,
+        err: '${err}'
+    }
+        ));
 });
 
 /********************************
@@ -68,12 +75,17 @@ router.delete('/deleteinfo/:id', function(req, res){
                 id: logID, owner_id: userid
             }
         })
-        .then(
-            function deleteLogSuccess(Log){
-                res.send('Log successfully deleted');
-            },
-            function deleteLogError(err){
-                res.send(500, err.message);
-            }
-    );
-});
+        .then(function createSuccess(data) {
+            res.status(200).json({
+                message: "User deleted",
+                data: data
+            })
+        }).catch(err => res.status(500).json({
+            message:`User Info not deleted`,
+            err: '${err}'
+        }
+            ));
+    });
+
+
+module.exports = router;
