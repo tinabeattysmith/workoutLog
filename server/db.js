@@ -18,4 +18,16 @@ sequelize.authenticate().then(
     }
 );
 
+User = require('./models/usermodel')(sequelize, require('sequelize'));
+Logs = require('./models/logmodel')(sequelize, require('sequelize'));
+UserInfo = require('./models/userinfo')(sequelize, require('sequelize'));
+
+Logs.belongsTo(User);
+User.hasMany(Logs);
+
+User.hasOne(UserInfo);
+UserInfo.belongsTo(User);
+
+
+
 module.exports = sequelize;
