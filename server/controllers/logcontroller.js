@@ -12,7 +12,8 @@ router.get('/logsall', function(req, res){
 
     Log
         .findAll({
-            where: {owner_id: logOwner}
+            where: {userId: logOwner},
+            include: 'user'
         })
         .then(
             function findAllSuccess(data) {
@@ -40,7 +41,8 @@ router.post('/logcreate', function (req, res) {
             description: logDescription,
             definition: logDefinition,
             result: logResult,
-            owner_id: logOwner
+            owner_id: logOwner,
+            userId: req.user.id
         })
         .then(
             function createSuccess(Log) {
@@ -136,5 +138,8 @@ router.put('/logupdate/:id', function (req, res) {
             }
         );
 });
+
+User.hasMany(Log);
+Log.belongsTo(User);
 
 module.exports = router;

@@ -6,7 +6,7 @@ const UserInfo = require('../models/userinfo')(sequelize, require('sequelize'));
 /********************************
 CREATE  information
 **********************************/
-router.post('/createInfo', (req, res) => {
+router.post('/createInfo/', (req, res) => {
  
 UserInfo.create({
     dateOfBirth: req.body.userInfo.dateOfBirth,
@@ -14,9 +14,9 @@ UserInfo.create({
     heightInInches: req.body.userInfo.heightInInches,
     weightInPounds: req.body.userInfo.weightInPounds,
     goal: req.body.userInfo.goal,
-    userId:req.user.id,
+    userId: req.user.id,
 })
-    .then(userInfo => res.status(200).json(userInfo))
+    .then(data => res.status(200).json(data))
     .catch(err => console.log(`${err}`));
 
 });
@@ -27,8 +27,9 @@ Get  information
 router.get('/getInfo', (req, res) => {
     UserInfo.findOne({
         where: {
-            userID: req.user.id
-        }
+            userId: req.user.id
+        },
+        include: ['user']
     })
     .then(function createSuccess(data) {
         res.status(200).json({
@@ -47,7 +48,7 @@ Update  information
 router.put('/updateInfo', (req, res) => {
     UserInfo.update(req.body.userInfo, {
         where: {
-            userID: req.user.id
+            userIs: req.user.id
         }
     })
     .then(function createSuccess(data) {
@@ -86,6 +87,7 @@ router.delete('/deleteinfo/:id', function(req, res){
         }
             ));
     });
-
-
+  
+    User.hasOne(UserInfo);
+    UserInfo.belongsTo(User);
 module.exports = router;

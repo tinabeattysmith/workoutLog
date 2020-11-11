@@ -6,7 +6,7 @@ const user = require('./controllers/usercontroller')
 const Log = require('./controllers/logcontroller');
 const userinfo = require('./controllers/userinfocontroller');
 
-sequelize.sync({force: true}); //tip {force: true} for resetting tables
+sequelize.sync(); //tip {force: true} for resetting tables
 app.use(express.json());
 app.use(require('./middleware/headers'));
 
@@ -18,11 +18,11 @@ app.use('/test', function(request, response){
 //User register route
 app.use('/user', user);
 
-
 //PROTECTED ROUTES
 app.use(require('./middleware/validate-session'));
 app.use('/log', Log);
-app.use('/info', userinfo)
+app.use('/info', userinfo);
+app.use('/userinfo', user);
 
 app.listen(3000, function(){
     console.log('App is listening on 3000')

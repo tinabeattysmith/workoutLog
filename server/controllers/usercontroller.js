@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router()
 const Sequelize = require('../db');
 const User = require('../models/usermodel')(Sequelize, require('sequelize'));
+const Log = require('../models/logmodel')(Sequelize, require('sequelize'));
+const UserInfo = require('../models/userinfo')(Sequelize, require('sequelize'));
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
@@ -60,5 +62,30 @@ router.post('/login', function(request, response){
     );
 });
 
+/********************************
+Get user and associated logs and information
+**********************************/
+router.get('/getuser', (req, res) => {
+    User.findOne({
+        where: {
+            id: req.user.id
+        },
+        include: ['userinfo','logs']
+    })
+    .then(function createSuccess(data) {
+        res.status(200).json({
+            message: "User info found",
+            data: data
+        })
+    }).catch(err => res.status(500).json({
+        message: `User Info not found`,
+        err: `${err}`}
+        ));
+});
+User.hasOne(UserInfo);
+UserInfo.belongsTo(User);
+
+User.hasMany(Log);
+Log.belongsTo(User);
 
 module.exports = router;
